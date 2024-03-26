@@ -31,23 +31,25 @@ def read_notes():
 
 
 def update_note():
-    note_id = input("Введите ID заметки для обновления: ")
+    note_id = input("Введите ID заметки для изменения: ")
     notes = load_notes()
     for note in notes:
         if note['id'] == note_id:
-            title = input("Введите новый заголовок заметки: ")
             text = input("Введите новый текст заметки: ")
-            note['title'] = title
             note['text'] = text
             note['date'] = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
             save_notes(notes)
-            print("Заметка успешно обновлена.")
+            print("Заметка успешно изменена.")
             return
     print("Заметка с указанным ID не найдена.")
 
 
 def delete_note():
-    pass
+    note_id = input("Введите ID заметки для удаления: ")
+    notes = load_notes()
+    filtered_notes = [note for note in notes if note['id'] != note_id]
+    save_notes(filtered_notes)
+    print("Заметка успешно удалена.")
 
 
 def load_notes():
@@ -65,11 +67,16 @@ def save_notes(notes):
 
 
 def generate_id():
-    pass
+    notes = load_notes()
+    if not notes:
+        return "1"
+    return str(int(notes[-1]['id']) + 1)
 
 
 def save_note(note):
-    pass
+    notes = load_notes()
+    notes.append(vars(note))
+    save_notes(notes)
 
 
 def main():
@@ -77,7 +84,7 @@ def main():
         print("Выберите действие:")
         print("1. Создать заметку")
         print("2. Просмотреть заметки")
-        print("3. Обновить заметку")
+        print("3. Изменить заметку")
         print("4. Удалить заметку")
         print("5. Выйти")
 
@@ -96,5 +103,6 @@ def main():
         else:
             print("Неверный выбор. Попробуйте снова.")
 
-    if __name__ == "__main__":
-        main()
+
+if __name__ == "__main__":
+    main()
