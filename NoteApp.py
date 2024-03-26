@@ -14,8 +14,8 @@ class Note:
 def create_note():
     title = input("Введите заголовок заметки: ")
     text = input("Введите текст заметки: ")
-    created_at = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-    note = Note(generate_id(), title, text, created_at)
+    date = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+    note = Note(generate_id(), title, text, date)
     save_note(note)
     print("Заметка успешно создана.")
 
@@ -23,15 +23,27 @@ def create_note():
 def read_notes():
     start_date = input("Введите дату в формате ДД.ММ.ГГГГ (оставьте пустым для отображения всех заметок): ")
     notes = load_notes()
-    filtered_notes = [note for note in notes if start_date == "" or note['created_at'] >= start_date]
+    filtered_notes = [note for note in notes if start_date == "" or note['date'] >= start_date]
     for note in filtered_notes:
-        print(f"ID: {note['id']}\nЗаголовок: {note['title']}\nДата создания: {note['created_at']}")
-        print(f"Текст заметки: {note['body']}")
+        print(f"ID: {note['id']}\nЗаголовок: {note['title']}\nДата создания: {note['date']}")
+        print(f"Текст заметки: {note['text']}")
         print("-" * 20)
 
 
 def update_note():
-    pass
+    note_id = input("Введите ID заметки для обновления: ")
+    notes = load_notes()
+    for note in notes:
+        if note['id'] == note_id:
+            title = input("Введите новый заголовок заметки: ")
+            text = input("Введите новый текст заметки: ")
+            note['title'] = title
+            note['text'] = text
+            note['date'] = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+            save_notes(notes)
+            print("Заметка успешно обновлена.")
+            return
+    print("Заметка с указанным ID не найдена.")
 
 
 def delete_note():
@@ -48,7 +60,8 @@ def load_notes():
 
 
 def save_notes(notes):
-    pass
+    with open("notes.json", "w") as file:
+        json.dump(notes, file, indent=4, default=vars)
 
 
 def generate_id():
