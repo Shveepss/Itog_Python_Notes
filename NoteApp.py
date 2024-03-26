@@ -12,7 +12,12 @@ class Note:
 
 
 def create_note():
-    pass
+    title = input("Введите заголовок заметки: ")
+    text = input("Введите текст заметки: ")
+    created_at = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+    note = Note(generate_id(), title, text, created_at)
+    save_note(note)
+    print("Заметка успешно создана.")
 
 
 def read_notes():
