@@ -21,7 +21,13 @@ def create_note():
 
 
 def read_notes():
-    pass
+    start_date = input("Введите дату в формате ДД.ММ.ГГГГ (оставьте пустым для отображения всех заметок): ")
+    notes = load_notes()
+    filtered_notes = [note for note in notes if start_date == "" or note['created_at'] >= start_date]
+    for note in filtered_notes:
+        print(f"ID: {note['id']}\nЗаголовок: {note['title']}\nДата создания: {note['created_at']}")
+        print(f"Текст заметки: {note['body']}")
+        print("-" * 20)
 
 
 def update_note():
@@ -33,7 +39,12 @@ def delete_note():
 
 
 def load_notes():
-    pass
+    try:
+        with open("notes.json", "r") as file:
+            notes = json.load(file)
+    except FileNotFoundError:
+        notes = []
+    return notes
 
 
 def save_notes(notes):
